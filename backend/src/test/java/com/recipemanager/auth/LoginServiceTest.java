@@ -27,6 +27,7 @@ class LoginServiceTest {
         AppUserRepository users = org.mockito.Mockito.mock(AppUserRepository.class);
         PasswordEncoder encoder = org.mockito.Mockito.mock(PasswordEncoder.class);
         AppUser user = new AppUser(UUID.randomUUID(), "cook@example.com", "Ada", "Cook");
+        when(values.get(LoginService.SESSION_VERSION_PREFIX + user.getId())).thenReturn(null);
         user.updatePasswordHash("{bcrypt}hash");
         user.verifyEmail();
         when(users.findByEmailIgnoreCase("cook@example.com")).thenReturn(Optional.of(user));
@@ -40,7 +41,7 @@ class LoginServiceTest {
         assertThat(response.accountStatus()).isEqualTo(AccountStatus.ACTIVE.name());
         org.mockito.Mockito.verify(values).set(
                 eq("recipe-manager:session:" + response.sessionToken()),
-                eq(user.getId().toString()),
+                eq(user.getId().toString() + ":1"),
                 eq(java.time.Duration.ofHours(8)));
     }
 

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 public class LoginService {
 
     private static final String SESSION_PREFIX = "recipe-manager:session:";
+    static final String SESSION_VERSION_PREFIX = "recipe-manager:session-version:";
     private static final Duration SESSION_TTL = Duration.ofHours(8);
 
     private final AppUserRepository users;
@@ -37,7 +38,13 @@ public class LoginService {
         }
 
         String token = UUID.randomUUID().toString();
-        redis.opsForValue().set(SESSION_PREFIX + token, user.getId().toString(), SESSION_TTL);
+        String versionKey = SESSION_VERSION_PREFIX + user.getId();
+        String version = redis.opsForValue().get(versionKey);
+        if (version == null) {
+            version = "1";
+            redis.opsForValue().set(versionKey, version);
+        }
+        redis.opsForValue().set(SESSION_PREFIX + token, user.getId() + ":" + version, SESSION_TTL);
         return new LoginResponse(user.getId(), token, user.getAccountStatus().name());
     }
 }

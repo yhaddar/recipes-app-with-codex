@@ -33,7 +33,8 @@ class SessionAuthenticationFilterTest {
         StringRedisTemplate redis = mock(StringRedisTemplate.class);
         ValueOperations<String, String> values = mock(ValueOperations.class);
         when(redis.opsForValue()).thenReturn(values);
-        when(values.get("recipe-manager:session:token")).thenReturn(id.toString());
+        when(values.get("recipe-manager:session:token")).thenReturn(id + ":1");
+        when(values.get(LoginService.SESSION_VERSION_PREFIX + id)).thenReturn("1");
         AppUserRepository users = mock(AppUserRepository.class);
         when(users.findById(id)).thenReturn(Optional.of(user));
         RoleService roles = mock(RoleService.class);
@@ -58,12 +59,34 @@ class SessionAuthenticationFilterTest {
         StringRedisTemplate redis = mock(StringRedisTemplate.class);
         ValueOperations<String, String> values = mock(ValueOperations.class);
         when(redis.opsForValue()).thenReturn(values);
-        when(values.get("recipe-manager:session:token")).thenReturn(id.toString());
+        when(values.get("recipe-manager:session:token")).thenReturn(id + ":1");
+        when(values.get(LoginService.SESSION_VERSION_PREFIX + id)).thenReturn("2");
         AppUserRepository users = mock(AppUserRepository.class);
         when(users.findById(id)).thenReturn(Optional.of(user));
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addHeader("Authorization", "Bearer token");
+        new SessionAuthenticationFilter(redis, users, mock(RoleService.class))
+                .doFilter(request, new MockHttpServletResponse(), mock(FilterChain.class));
+
+        assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
+    }
+
+    @Test
+    void rejectsOldSessionAfterAccountIsReactivated() throws Exception {
+        UUID id = UUID.randomUUID();
+        AppUser user = new AppUser(id, "cook@example.com", "Ada", "Cook");
+        user.verifyEmail();
+        StringRedisTemplate redis = mock(StringRedisTemplate.class);
+        ValueOperations<String, String> values = mock(ValueOperations.class);
+        when(redis.opsForValue()).thenReturn(values);
+        when(values.get("recipe-manager:session:token")).thenReturn(id + ":1");
+        when(values.get(LoginService.SESSION_VERSION_PREFIX + id)).thenReturn("2");
+        AppUserRepository users = mock(AppUserRepository.class);
+        when(users.findById(id)).thenReturn(Optional.of(user));
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addHeader("Authorization", "Bearer token");
+
         new SessionAuthenticationFilter(redis, users, mock(RoleService.class))
                 .doFilter(request, new MockHttpServletResponse(), mock(FilterChain.class));
 

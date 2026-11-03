@@ -46,8 +46,14 @@ public class SessionAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
         try {
-            String rawUserId = redis.opsForValue().get(SESSION_PREFIX + token);
-            if (rawUserId == null) {
+            String session = redis.opsForValue().get(SESSION_PREFIX + token);
+            if (session == null || !session.contains(":")) {
+                return;
+            }
+            String[] sessionParts = session.split(":", 2);
+            String rawUserId = sessionParts[0];
+            String currentVersion = redis.opsForValue().get(LoginService.SESSION_VERSION_PREFIX + rawUserId);
+            if (!sessionParts[1].equals(currentVersion)) {
                 return;
             }
             users.findById(UUID.fromString(rawUserId))
