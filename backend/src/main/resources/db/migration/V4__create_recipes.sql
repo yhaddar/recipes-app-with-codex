@@ -1,0 +1,22 @@
+CREATE TABLE recipes (
+    id UUID NOT NULL,
+    owner_id UUID NOT NULL,
+    title VARCHAR(200) NOT NULL,
+    description TEXT,
+    preparation_time_minutes INTEGER,
+    cooking_time_minutes INTEGER,
+    total_time_minutes INTEGER,
+    servings INTEGER NOT NULL,
+    difficulty VARCHAR(20) NOT NULL DEFAULT 'MEDIUM',
+    publication_status VARCHAR(20) NOT NULL DEFAULT 'DRAFT',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT pk_recipes PRIMARY KEY (id),
+    CONSTRAINT fk_recipes_owner FOREIGN KEY (owner_id) REFERENCES users (id) ON DELETE CASCADE,
+    CONSTRAINT ck_recipes_servings CHECK (servings > 0),
+    CONSTRAINT ck_recipes_preparation_time CHECK (preparation_time_minutes IS NULL OR preparation_time_minutes >= 0),
+    CONSTRAINT ck_recipes_cooking_time CHECK (cooking_time_minutes IS NULL OR cooking_time_minutes >= 0),
+    CONSTRAINT ck_recipes_total_time CHECK (total_time_minutes IS NULL OR total_time_minutes >= 0),
+    CONSTRAINT ck_recipes_difficulty CHECK (difficulty IN ('EASY', 'MEDIUM', 'HARD')),
+    CONSTRAINT ck_recipes_publication_status CHECK (publication_status IN ('DRAFT', 'PUBLISHED'))
+);
