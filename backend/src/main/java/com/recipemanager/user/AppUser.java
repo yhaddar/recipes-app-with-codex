@@ -67,8 +67,18 @@ public class AppUser {
         return accountStatus;
     }
 
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
     public void updatePasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
         this.updatedAt = Instant.now();
+    }
+
+    public void verifyEmail() {
+        this.emailVerifiedAt = Instant.now();
+        this.accountStatus = AccountStatus.ACTIVE;
+        this.updatedAt = this.emailVerifiedAt;
     }
 }

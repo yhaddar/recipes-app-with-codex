@@ -7,9 +7,9 @@
 
 ## Executive status
 
-The repository is an active Version 2 implementation, not an empty setup project. The current branch is `feat/be-10-redis-rate-limiting`; the worktree is clean. The latest commit is `ea59236` (`feat(api): add pagination response convention`). No BE-10 implementation exists yet, so the branch name is ahead of the actual implementation.
+The repository is an active Version 2 implementation, not an empty setup project. The current continuation branch is `feat/auth-07-password-recovery`; the worktree is clean. The latest continuation commit is `71988f2` (`feat(auth): add password recovery flow`).
 
-The committed work establishes most of the project and database foundation and a partial backend-core foundation. The application is not yet a complete Version 2 application. Authentication, feature APIs, frontend application behavior, CI, end-to-end coverage, visual regression evidence, independent code review evidence, and the final test report remain outstanding.
+The committed work establishes most of the project/database foundation, backend-core conventions, rate limiting, and an expanding authentication foundation. The application is not yet a complete Version 2 application. Most feature APIs, frontend application behavior, CI, end-to-end coverage, visual regression evidence, independent code review evidence, and the final test report remain outstanding.
 
 ## Git and workspace evidence
 
@@ -22,7 +22,7 @@ git log --oneline --decorate -20
 git status --porcelain=v1
 ```
 
-Observed state:
+Observed state at the initial audit:
 
 - Current branch: `feat/be-10-redis-rate-limiting`
 - Worktree: clean; no staged, unstaged, untracked, or merge-conflict entries were reported.
@@ -30,6 +30,19 @@ Observed state:
 - No push or merge was performed.
 - Git metadata is readable and the repository has existing task branches and commits.
 - Branch tips are task-oriented. `feat/be-10-redis-rate-limiting` currently points at `ea59236`, the same commit as `feat/be-04-pagination-conventions`.
+
+Continuation state after the audit:
+
+- `71fa657` records this audit report.
+- `eb2d5b2` implements BE-10 Redis-backed IP rate limiting.
+- `db15c9c` implements BE-03 DTO mapping conventions.
+- `46720d5` implements BE-05 validation error mapping.
+- `5680ab8` implements AUTH-01 registration.
+- `5325d01` implements AUTH-03 email verification.
+- `5c0d044` implements AUTH-04 login sessions.
+- `2493b1d` implements AUTH-05 logout invalidation.
+- `d31e29b` implements AUTH-06 session authentication.
+- `71988f2` implements AUTH-07 password recovery/reset.
 
 Relevant commit sequence:
 
@@ -100,14 +113,14 @@ Status meanings: **implemented/committed** means source and a task commit exist;
 |---|---|---|
 | BE-01 | Implemented/committed; not independently reviewed in this audit | Global exception handler and tests exist in `5e1ab0d` |
 | BE-02 | Implemented/committed; not independently reviewed in this audit | `ApiResponse` and tests in `6eb1815` |
-| BE-03 | Not started | No mapper convention or mapper tests found |
+| BE-03 | Implemented/committed after audit | `db15c9c`; generic DTO mapper and user-summary mapping tests |
 | BE-04 | Implemented/committed; not independently reviewed in this audit | `PageResponse` and tests in `ea59236` |
-| BE-05 | Not started | No shared validation convention found |
+| BE-05 | Implemented/committed after audit | `46720d5`; reusable validation error mapper and tests |
 | BE-06 | Not started | No justified reusable helper task evidence |
 | BE-07 | Not started | No custom validator task evidence |
 | BE-08 | Partial | Logging configuration exists; safe-context/redaction evidence is incomplete |
 | BE-09 | Partial | OpenAPI metadata exists; endpoint contract coverage is absent |
-| BE-10 | Incomplete/current continuation point | Active branch has no rate-limiting implementation or tests |
+| BE-10 | Implemented/committed after audit | `eb2d5b2`; Redis atomic counter, trusted-proxy resolver, filter, and focused tests |
 | BE-11 | Not started | Redis connectivity exists; cache foundation is absent |
 | BE-12 | Partial | Storage foundation exists; complete API/service integration is absent |
 | BE-13 | Partial | SMTP foundation exists; complete use-case integration is absent |
@@ -116,7 +129,15 @@ Status meanings: **implemented/committed** means source and a task commit exist;
 
 | Phase | Assessment | Evidence / gap |
 |---|---|---|
-| AUTH-01–AUTH-14 | Not started | No authentication controllers/services, token/session workflows, or OAuth provider implementation found |
+| AUTH-01 | Implemented/committed after audit | `5680ab8`; registration validation, duplicate handling, password encoding, pending user/role assignment |
+| AUTH-02 | Implemented with AUTH-01; separate task evidence not yet recorded | PasswordEncoder configuration and password hash update are in `5680ab8` |
+| AUTH-03 | Implemented/committed after audit | `5325d01`; Redis verification token, SMTP message, activation, token consumption |
+| AUTH-04 | Implemented/committed after audit | `5c0d044`; active-account login and opaque Redis session |
+| AUTH-05 | Implemented/committed after audit | `2493b1d`; logout deletes the server-side session |
+| AUTH-06 | Implemented/committed after audit | `d31e29b`; bearer session authentication filter and stateless security |
+| AUTH-07 | Implemented/committed after audit | `71988f2`; generic reset request, expiring token, reset workflow |
+| AUTH-08 | Not started | Frontend/authentication error integration remains |
+| AUTH-09–AUTH-14 | Not started | Role management, complete authorization/ownership, account administration, security integration, and OAuth providers remain |
 | FE-01–FE-13 | Incomplete/not started | Angular shell exists; routes are empty and feature architecture/components are absent |
 | FE-AUTH-01–FE-AUTH-08 | Not started | No authentication pages or flows found |
 | PUB-01–PUB-16 | Not started | Prototype exists, but no Angular pages or public APIs are implemented |
@@ -144,7 +165,7 @@ During this audit, no database-backed test suite was claimed as passed because t
 
 ## Continuation point
 
-The first genuinely incomplete task in the active branch's roadmap position is **BE-10 — Configure rate-limiting mechanism**. Its prerequisites BE-01, BE-02, and BE-04 have committed foundations; BE-03/BE-05–BE-09 are either absent or partial but do not provide a complete rate-limiter implementation. Before implementation, the task requires a contract/test checklist and an isolated task branch. The current branch already has the correct task name but points to the previous BE-04 commit, so it can be reused for BE-10 after the audit report is committed, subject to preserving the clean state.
+At the end of the initial audit, BE-10 was the active continuation point. That task and the next directly useful backend/authentication tasks are now committed. The next incomplete roadmap task is AUTH-08, followed by role/authorization hardening and the frontend foundation. The report should continue to distinguish implementation commits from complete acceptance evidence.
 
 ## Blockers and risks
 
@@ -156,8 +177,8 @@ The first genuinely incomplete task in the active branch's roadmap position is *
 
 ## Recommended next task
 
-Proceed with **BE-10** on `feat/be-10-redis-rate-limiting`: establish the locked `5 requests / 60 seconds / IP` contract, implement Redis-backed shared state with trusted-proxy handling, add meaningful unit/integration tests without exposing secrets, perform an independent read-only review, run safe verification, and commit only BE-10 changes. Then continue in roadmap order, keeping each task isolated and honestly reporting unavailable live/integration evidence.
+Proceed with **AUTH-08** on a dedicated branch: complete frontend/API authentication error handling and its tests, then continue through authorization and frontend foundation. Live Redis/PostgreSQL/SMTP, E2E, visual regression, and independent read-only review evidence remain separate verification gaps.
 
 ## Audit conclusion
 
-The project is **in progress and not complete**. The repository is clean and Git metadata is usable. Existing work is preserved. The next implementation step is BE-10, but completion of the full Version 2 application remains a substantial sequence of unimplemented tasks.
+The project is **in progress and not complete**. The repository is clean and Git metadata is usable. Existing work is preserved. Authentication has a partial backend implementation, but completion of the full Version 2 application remains a substantial sequence of unimplemented tasks and unverified integrations.

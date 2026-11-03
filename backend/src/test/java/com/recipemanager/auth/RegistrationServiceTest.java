@@ -27,7 +27,9 @@ class RegistrationServiceTest {
     private final RoleRepository roles = org.mockito.Mockito.mock(RoleRepository.class);
     private final UserRoleRepository userRoles = org.mockito.Mockito.mock(UserRoleRepository.class);
     private final PasswordEncoder passwordEncoder = org.mockito.Mockito.mock(PasswordEncoder.class);
-    private final RegistrationService service = new RegistrationService(users, roles, userRoles, passwordEncoder);
+    private final EmailVerificationService verificationService = org.mockito.Mockito.mock(EmailVerificationService.class);
+    private final RegistrationService service = new RegistrationService(
+            users, roles, userRoles, passwordEncoder, verificationService);
 
     @Test
     void registersPendingUserWithHashedPasswordAndUserRole() {

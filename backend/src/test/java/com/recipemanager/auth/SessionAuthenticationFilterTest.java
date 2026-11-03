@@ -1,0 +1,63 @@
+package com.recipemanager.auth;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.util.Optional;
+import java.util.UUID;
+
+import com.recipemanager.user.AppUser;
+import com.recipemanager.user.AppUserRepository;
+import jakarta.servlet.FilterChain;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+class SessionAuthenticationFilterTest {
+
+    @AfterEach
+    void clearContext() {
+        SecurityContextHolder.clearContext();
+    }
+
+    @Test
+    void authenticatesBearerSessionForExistingUser() throws Exception {
+        UUID id = UUID.randomUUID();
+        AppUser user = new AppUser(id, "cook@example.com", "Ada", "Cook");
+        StringRedisTemplate redis = mock(StringRedisTemplate.class);
+        ValueOperations<String, String> values = mock(ValueOperations.class);
+        when(redis.opsForValue()).thenReturn(values);
+        when(values.get("recipe-manager:session:token")).thenReturn(id.toString());
+        AppUserRepository users = mock(AppUserRepository.class);
+        when(users.findById(id)).thenReturn(Optional.of(user));
+        FilterChain chain = mock(FilterChain.class);
+        SessionAuthenticationFilter filter = new SessionAuthenticationFilter(redis, users);
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addHeader("Authorization", "Bearer token");
+
+        filter.doFilter(request, new MockHttpServletResponse(), chain);
+
+        assertThat(SecurityContextHolder.getContext().getAuthentication().isAuthenticated()).isTrue();
+        assertThat(SecurityContextHolder.getContext().getAuthentication().getName()).isEqualTo(id.toString());
+    }
+
+    @Test
+    void ignoresMissingOrUnknownSession() throws Exception {
+        StringRedisTemplate redis = mock(StringRedisTemplate.class);
+        ValueOperations<String, String> values = mock(ValueOperations.class);
+        when(redis.opsForValue()).thenReturn(values);
+        when(values.get("recipe-manager:session:unknown")).thenReturn(null);
+        SessionAuthenticationFilter filter = new SessionAuthenticationFilter(redis, mock(AppUserRepository.class));
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addHeader("Authorization", "Bearer unknown");
+
+        filter.doFilter(request, new MockHttpServletResponse(), mock(FilterChain.class));
+
+        assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
+    }
+}
