@@ -8,6 +8,11 @@ server:
   port: ${SERVER_PORT:8080}
 
 app:
+  rate-limit:
+    limit: ${RATE_LIMIT_MAX_REQUESTS:5}
+    window: ${RATE_LIMIT_WINDOW:60s}
+    key-prefix: ${RATE_LIMIT_KEY_PREFIX:recipe-manager:rate-limit}
+    trusted-proxies: ${TRUSTED_PROXIES:}
   storage:
     image-directory: ${IMAGE_STORAGE_DIRECTORY:storage/images}
     max-file-size: ${IMAGE_MAX_FILE_SIZE:5242880}
