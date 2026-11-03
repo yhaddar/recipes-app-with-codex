@@ -7,10 +7,18 @@ import com.recipemanager.user.AppUser;
 import com.recipemanager.user.AppUserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AdminUserService {
+
+    private static final RedisScript<Long> BUMP_SESSION_VERSION = new DefaultRedisScript<>(
+            "local version = redis.call('INCR', KEYS[1]) "
+                    + "if version == 1 then redis.call('SET', KEYS[1], '2') return 2 end "
+                    + "return version",
+            Long.class);
 
     private final AppUserRepository users;
     private final StringRedisTemplate redis;
@@ -42,9 +50,6 @@ public class AdminUserService {
 
     private void bumpSessionVersion(UUID userId) {
         String versionKey = LoginService.SESSION_VERSION_PREFIX + userId;
-        Long newVersion = redis.opsForValue().increment(versionKey);
-        if (newVersion != null && newVersion == 1L) {
-            redis.opsForValue().set(versionKey, "2");
-        }
+        redis.execute(BUMP_SESSION_VERSION, java.util.List.of(versionKey));
     }
 }
