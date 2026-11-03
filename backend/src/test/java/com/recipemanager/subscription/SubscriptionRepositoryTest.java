@@ -31,8 +31,7 @@ class SubscriptionRepositoryTest {
     void persistsTrialSubscriptionForUser() {
         AppUser user = userRepository.saveAndFlush(new AppUser(
                 UUID.randomUUID(), UUID.randomUUID() + "@example.test", "Ada", "Lovelace"));
-        SubscriptionPlan plan = planRepository.saveAndFlush(new SubscriptionPlan(
-                UUID.randomUUID(), PlanCode.FREE_TRIAL, "Free trial", new BigDecimal("0.00")));
+        SubscriptionPlan plan = planRepository.findByCode(PlanCode.FREE_TRIAL).orElseThrow();
 
         Subscription subscription = repository.saveAndFlush(
                 new Subscription(UUID.randomUUID(), user, plan));

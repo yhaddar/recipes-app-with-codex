@@ -20,20 +20,18 @@ class RoleRepositoryTest {
 
     @Test
     void persistsApprovedRoleName() {
-        Role role = repository.saveAndFlush(new Role(UUID.randomUUID(), RoleName.ADMIN));
+        Role role = repository.findByName(RoleName.ADMIN).orElseThrow();
 
         assertThat(role.getName()).isEqualTo(RoleName.ADMIN);
-        repository.deleteById(role.getId());
     }
 
     @Test
     void rejectsDuplicateRoleName() {
-        Role first = repository.saveAndFlush(new Role(UUID.randomUUID(), RoleName.USER));
+        Role first = repository.findByName(RoleName.USER).orElseThrow();
 
         assertThatThrownBy(() -> repository.saveAndFlush(
                 new Role(UUID.randomUUID(), RoleName.USER)))
                 .isInstanceOf(DataIntegrityViolationException.class);
-
-        repository.deleteById(first.getId());
+        assertThat(first.getName()).isEqualTo(RoleName.USER);
     }
 }
