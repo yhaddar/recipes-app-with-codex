@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin workspace — Recipe Manager</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell nav">
+      <a class="brand" href="index.html"><span class="brand-mark">rm</span>
+      recipe manager</a><span class="menu-note">admin workspace</span>
+      <div class="nav-actions">
+        <a class="button button-secondary" href="index.html">View
+        frontoffice</a><a class="button button-primary" href="index.html">Log
+        out</a>
+      </div>
+    </div>
+  </header>
+  <div class="dashboard-shell">
+    <aside class="side" aria-label="Admin navigation">
+      <span class="side-label">Admin</span><a class="current" href=
+      "admin.html">⌂ <span>Overview</span></a><a href="admin.html#users">●
+      <span>Users</span></a><a href="admin.html#moderation">▣
+      <span>Moderation</span></a><a href="admin.html#taxonomy">⌘
+      <span>Categories & tags</span></a><a href="admin.html#reports">!
+      <span>Reports</span></a><a href="admin.html#plans">◇
+      <span>Plans</span></a><a href="admin.html#activity">◷
+      <span>Activity</span></a>
+    </aside>
+    <main class="workspace">
+      <div class="workspace-top">
+        <div>
+          <span class="eyebrow">platform pulse</span>
+          <h1>Good morning, admin.</h1>
+          <p>Keep the table welcoming, useful, and safe.</p>
+        </div><span class="status status-green">All systems calm</span>
+      </div>
+      <div class="metric-grid">
+        <div class="metric">
+          <span>Total members</span><strong>12,486</strong><em>↑ 8.4% this
+          month</em>
+        </div>
+        <div class="metric">
+          <span>Published recipes</span><strong>4,208</strong><em>↑ 142 this
+          month</em>
+        </div>
+        <div class="metric">
+          <span>Pending reports</span><strong>18</strong><em style=
+          "color:var(--terracotta)">Needs attention</em>
+        </div>
+        <div class="metric">
+          <span>Active Pro plans</span><strong>1,824</strong><em>↑ 4.2% this
+          month</em>
+        </div>
+      </div>
+      <section class="panel" id="users">
+        <div class="panel-head">
+          <h2>Recent members</h2><a class=
+          "button button-small button-secondary" href="#users">View all users
+          →</a>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Member</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Joined</th>
+                <th>Activity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Amelia Moreau</strong><br>
+                <span class="meta">amelia@example.com</span></td>
+                <td>User</td>
+                <td><span class="status status-green">Active</span></td>
+                <td>Today</td>
+                <td>24 recipes</td>
+              </tr>
+              <tr>
+                <td><strong>Jonas Lee</strong><br>
+                <span class="meta">jonas@example.com</span></td>
+                <td>User</td>
+                <td><span class="status status-green">Active</span></td>
+                <td>Yesterday</td>
+                <td>8 recipes</td>
+              </tr>
+              <tr>
+                <td><strong>Marta Silva</strong><br>
+                <span class="meta">marta@example.com</span></td>
+                <td>User</td>
+                <td><span class="status status-gold">Review</span></td>
+                <td>Yesterday</td>
+                <td>2 reports</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section class="section-tight" style="padding-bottom:0">
+        <div class="detail-grid">
+          <section class="panel" id="moderation">
+            <div class="panel-head">
+              <h2>Moderation queue</h2><a href="#moderation">Open queue →</a>
+            </div>
+            <div class="activity">
+              <div class="activity-item">
+                <span class="avatar" style="background:#fae4dc">!</span>
+                <p><strong>Recipe report · “Sunday table loaf”</strong><br>
+                <small>Reported for duplicate content · 12 min ago</small></p>
+              </div>
+              <div class="activity-item">
+                <span class="avatar" style="background:#fbf0d2">!</span>
+                <p><strong>Blog review · “A sauce is a mood”</strong><br>
+                <small>Awaiting content check · 35 min ago</small></p>
+              </div>
+              <div class="activity-item">
+                <span class="avatar" style="background:#e7f1e4">✓</span>
+                <p><strong>12 reports resolved today</strong><br>
+                <small>Thank you for keeping the table kind.</small></p>
+              </div>
+            </div>
+          </section>
+          <section class="panel" id="activity">
+            <div class="panel-head">
+              <h2>Platform activity</h2><a href="#activity">Audit log →</a>
+            </div>
+            <div class="chart"></div>
+            <div class="meta" style="justify-content:space-between">
+              <span>Mon</span>
+              <span>Tue</span>
+              <span>Wed</span>
+              <span>Thu</span>
+              <span>Fri</span>
+              <span>Sat</span>
+              <span>Sun</span>
+            </div>
+          </section>
+        </div>
+      </section>
+      <section class="section-tight" style="padding-bottom:0">
+        <div class="detail-grid">
+          <section class="panel" id="taxonomy">
+            <div class="panel-head">
+              <h2>Categories & tags</h2><a href="#taxonomy">Manage →</a>
+            </div>
+            <div class="pill-row" style="margin:0">
+              <span class="tag">weeknight · 284</span><span class="tag">fresh ·
+              196</span><span class="tag">baking · 152</span><span class=
+              "tag">comfort · 129</span>
+            </div>
+          </section>
+          <section class="panel" id="reports">
+            <div class="panel-head">
+              <h2>Reports</h2><a href="#reports">Review →</a>
+            </div>
+            <p style="color:var(--muted);margin:0">18 open reports across
+            recipes, stories, and comments.</p>
+          </section>
+        </div>
+      </section>
+      <section class="section-tight" style="padding-bottom:0">
+        <div class="panel" id="plans">
+          <div class="panel-head">
+            <h2>Subscription plans</h2><a class=
+            "button button-small button-primary" href="#plans">Edit plans</a>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Plan</th>
+                  <th>Members</th>
+                  <th>Monthly price</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Free</strong></td>
+                  <td>8,904</td>
+                  <td>$0</td>
+                  <td><span class="status status-green">Active</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Pro</strong></td>
+                  <td>1,824</td>
+                  <td>$8</td>
+                  <td><span class="status status-green">Active</span></td>
+                </tr>
+                <tr>
+                  <td><strong>Premium</strong></td>
+                  <td>1,758</td>
+                  <td>$14</td>
+                  <td><span class="status status-green">Active</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

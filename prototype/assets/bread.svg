@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="title desc">
+  <title id="title">Rustic sourdough</title><desc id="desc">Illustrated loaf of rustic sourdough on linen.</desc>
+  <rect width="800" height="600" fill="#efe5d4"/><path d="M0 440c210-100 410-70 800-130v290H0Z" fill="#d3b184" opacity=".48"/>
+  <path d="M195 350c-10-128 84-194 218-189 135 5 225 76 195 201-29 119-116 142-238 136-123-5-165-49-175-148Z" fill="#c86d3e"/>
+  <path d="M310 222c-30 42-21 76 7 95M425 188c-24 48-12 79 20 100M532 226c-23 38-15 71 16 98" fill="none" stroke="#f2cb84" stroke-width="22" stroke-linecap="round"/>
+</svg>

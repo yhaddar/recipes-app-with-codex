@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Create recipe — Recipe Manager</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell nav">
+      <a class="brand" href="index.html"><span class="brand-mark">rm</span>
+      recipe manager</a><span class="menu-note">new recipe</span>
+      <div class="nav-actions">
+        <a class="button button-secondary" href="dashboard.html">Save
+        draft</a><a class="button button-primary" href="recipe.html">Preview
+        recipe</a>
+      </div>
+    </div>
+  </header>
+  <main class="workspace" style="max-width:1180px;margin:auto">
+    <div class="workspace-top">
+      <div>
+        <div class="crumbs">
+          <a href="dashboard.html">Your kitchen</a> / New recipe
+        </div><span class="eyebrow">tell us what’s cooking</span>
+        <h1>Build a recipe.</h1>
+        <p>Add the details that make it yours. You can always come back to
+        it.</p>
+      </div><span class="status status-gold">Draft · autosaved 2 min ago</span>
+    </div>
+    <form class="form-layout" action="recipe.html">
+      <div>
+        <section class="form-panel">
+          <h2>Start with the story</h2>
+          <div class="field-grid">
+            <div class="field full">
+              <label for="title">Recipe title</label><input id="title"
+              required="" value="Sunlit lemon pasta">
+            </div>
+            <div class="field full">
+              <label for="description">A short description <span class=
+              "hint">This appears on recipe cards.</span></label> 
+              <textarea id=
+              "description">Silky, bright, and generous enough for the people who always stay for dinner.</textarea>
+            </div>
+            <div class="field">
+              <label for="prep">Prep time</label><input id="prep" value=
+              "10 min">
+            </div>
+            <div class="field">
+              <label for="cook">Cook time</label><input id="cook" value=
+              "15 min">
+            </div>
+            <div class="field">
+              <label for="servings">Servings</label><input id="servings" type=
+              "number" value="4">
+            </div>
+            <div class="field">
+              <label for="difficulty">Difficulty</label><select id=
+              "difficulty">
+                <option>
+                  Easy
+                </option>
+                <option>
+                  Medium
+                </option>
+                <option>
+                  Advanced
+                </option>
+              </select>
+            </div>
+          </div>
+        </section>
+        <section class="form-panel" style="margin-top:18px">
+          <h2>Ingredients</h2>
+          <div class="field">
+            <label for="ingredients">One ingredient per line <span class=
+            "hint">Keep quantities clear and friendly.</span></label> 
+            <textarea id="ingredients">320g spaghetti
+2 unwaxed lemons
+80g parmesan, finely grated
+3 tbsp olive oil
+2 garlic cloves, sliced
+1 handful fresh basil</textarea>
+          </div><a class="button button-secondary button-small" href=
+          "#ingredients">＋ Add ingredient</a>
+        </section>
+        <section class="form-panel" style="margin-top:18px">
+          <h2>Instructions</h2>
+          <div class="field">
+            <label for="instructions">The rhythm of the recipe</label> 
+            <textarea id="instructions">Boil the water and salt generously.
+Warm olive oil, garlic, chili, and lemon zest.
+Add pasta, cooking water, lemon juice, and parmesan.
+Fold through basil and serve while glossy.</textarea>
+          </div><a class="button button-secondary button-small" href=
+          "#instructions">＋ Add step</a>
+        </section>
+      </div>
+      <aside>
+        <section class="form-panel">
+          <div class="upload">
+            <div>
+              <strong>＋ Add a cover image</strong><small>JPG, PNG up to
+              10MB</small>
+            </div>
+          </div>
+          <div class="field" style="margin-top:20px">
+            <label for="category">Category</label><select id="category">
+              <option>
+                Weeknight
+              </option>
+              <option>
+                Comfort food
+              </option>
+              <option>
+                Baking
+              </option>
+              <option>
+                Fresh
+              </option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="tags">Tags</label><input id="tags" value=
+            "quick, lemon, pasta">
+          </div><label class="check-row"><input type="checkbox" checked>
+          <span>Make this recipe visible to the community.</span></label>
+          <div class="field-actions" style="margin-top:20px">
+            <button class="button button-primary" type="submit">Publish
+            recipe</button>
+          </div>
+        </section>
+      </aside>
+    </form>
+  </main>
+</body>
+</html>

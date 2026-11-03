@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="title desc">
+  <title id="title">Fresh green salad</title><desc id="desc">Illustrated bowl of greens, citrus and vegetables.</desc>
+  <rect width="800" height="600" fill="#dfe8d9"/><circle cx="125" cy="105" r="86" fill="#f4edda"/>
+  <ellipse cx="400" cy="335" rx="260" ry="148" fill="#b94e35"/><ellipse cx="400" cy="302" rx="226" ry="118" fill="#4e7558"/>
+  <circle cx="300" cy="286" r="50" fill="#e3b64e"/><circle cx="485" cy="270" r="38" fill="#db6f43"/><circle cx="430" cy="350" r="47" fill="#f1d884"/>
+  <g fill="#8dae71"><ellipse cx="360" cy="240" rx="23" ry="58" transform="rotate(-24 360 240)"/><ellipse cx="534" cy="335" rx="22" ry="57" transform="rotate(45 534 335)"/><ellipse cx="240" cy="345" rx="23" ry="55" transform="rotate(55 240 345)"/></g>
+</svg>

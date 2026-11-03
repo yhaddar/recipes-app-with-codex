@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign in — Recipe Manager</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell nav">
+      <a class="brand" href="index.html"><span class="brand-mark">rm</span>
+      recipe manager</a> <a class="button button-quiet" href="index.html">←
+      Back home</a>
+    </div>
+  </header>
+  <main class="auth-wrap">
+    <section class="auth-card" aria-labelledby="auth-title">
+      <span class="eyebrow">your kitchen, waiting</span>
+      <h1 id="auth-title">Come on in.</h1>
+      <p>Pick up where you left off, or make a fresh start in your kitchen.</p>
+      <div class="auth-switch" role="tablist" aria-label="Authentication mode">
+        <input class="auth-mode" type="radio" name="auth-mode" id="mode-login"
+        checked> <label for="mode-login" role="tab">Sign in</label>
+        <input class="auth-mode" type="radio" name="auth-mode" id=
+        "mode-register"> <label for="mode-register" role="tab">Create
+        account</label>
+      </div>
+      <div class="social-row" aria-label="Social sign in options">
+        <a class="social" href="#mode-login" aria-label="Continue with Google"
+        title="Continue with Google"><span class=
+        "provider-icon provider-google" aria-hidden="true">G</span></a>
+        <a class="social" href="#mode-login" aria-label=
+        "Continue with Facebook" title="Continue with Facebook"><span class=
+        "provider-icon provider-facebook" aria-hidden="true">f</span></a>
+      </div>
+      <div class="divider">
+        or use your email
+      </div>
+      <div class="auth-panel auth-panel-login" role="tabpanel" aria-labelledby=
+      "mode-login">
+        <form action="dashboard.html">
+          <div class="field">
+            <label for="email">Email address</label> <input id="email" type=
+            "email" required="" placeholder="you@example.com">
+          </div>
+          <div class="field">
+            <label for="password">Password <a class="field-link" href=
+            "#forgot">Forgot?</a></label> <input id="password" type="password"
+            required="" placeholder="••••••••">
+          </div><button class="button button-primary button-wide" type=
+          "submit">Sign in <span aria-hidden="true">→</span></button>
+        </form>
+        <details class="forgot" id="forgot">
+          <summary>
+            Need a password reset?
+          </summary>
+          <form action="auth.html#mode-login">
+            <div class="field">
+              <label for="reset-email">Send a reset link to</label> <input id=
+              "reset-email" type="email" required="" placeholder=
+              "you@example.com">
+            </div><button class="button button-secondary button-wide" type=
+            "submit">Send reset link</button>
+          </form>
+        </details>
+      </div>
+      <div class="auth-panel auth-panel-register" role="tabpanel"
+      aria-labelledby="mode-register">
+        <form action="dashboard.html">
+          <div class="field">
+            <label for="name">Your name</label> <input id="name" required=""
+            placeholder="Amelia Moreau">
+          </div>
+          <div class="field">
+            <label for="new-email">Email address</label> <input id="new-email"
+            type="email" required="" placeholder="you@example.com">
+          </div>
+          <div class="field">
+            <label for="new-password">Create a password</label> <input id=
+            "new-password" type="password" required="" placeholder=
+            "At least 8 characters">
+          </div><label class="check-row"><input type="checkbox" required="">
+          <span>I agree to the <a class="field-link" href=
+          "terms.html">Terms</a> and <a class="field-link" href=
+          "privacy.html">Privacy Policy</a>.</span></label> <button class=
+          "button button-dark button-wide" type="submit">Create your kitchen
+          <span aria-hidden="true">→</span></button>
+        </form>
+      </div>
+      <div class="auth-foot">
+        <a href="privacy.html">Privacy</a> <a href="terms.html">Terms</a>
+        <span>English only</span>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

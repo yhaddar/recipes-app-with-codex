@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-labelledby="title desc">
+  <title id="title">Golden pasta bowl</title><desc id="desc">Illustrated bowl of golden pasta with herbs.</desc>
+  <rect width="800" height="600" fill="#e8dcc8"/><circle cx="650" cy="90" r="120" fill="#f5eddf"/>
+  <ellipse cx="400" cy="315" rx="260" ry="165" fill="#50715b"/><ellipse cx="400" cy="286" rx="225" ry="132" fill="#f8e4b8"/>
+  <path d="M225 285c68-92 118 86 180-3 68-96 102 96 172 1 26 22 38 47 42 78H182c5-29 17-54 43-76Z" fill="none" stroke="#e3a34c" stroke-width="29" stroke-linecap="round"/>
+  <path d="M260 224c62 49 114 54 176 2M450 225c37 35 75 46 117 29" fill="none" stroke="#d17c39" stroke-width="18" stroke-linecap="round"/>
+  <g fill="#54745a"><ellipse cx="275" cy="180" rx="14" ry="36" transform="rotate(-36 275 180)"/><ellipse cx="545" cy="180" rx="14" ry="36" transform="rotate(32 545 180)"/></g>
+</svg>

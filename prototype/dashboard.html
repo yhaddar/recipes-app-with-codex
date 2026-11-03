@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Your kitchen — Recipe Manager</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell nav">
+      <a class="brand" href="index.html"><span class="brand-mark">rm</span>
+      recipe manager</a><span class="menu-note">Amelia’s kitchen</span>
+      <div class="nav-actions">
+        <a class="button button-secondary" href=
+        "explore.html">Explore</a><a class="button button-primary" href=
+        "index.html">Log out</a>
+      </div>
+    </div>
+  </header>
+  <div class="dashboard-shell">
+    <aside class="side" aria-label="Workspace navigation">
+      <span class="side-label">Your kitchen</span><a class="current" href=
+      "dashboard.html">⌂ <span>Overview</span></a><a href=
+      "dashboard.html#recipes">▣ <span>My recipes</span></a><a href=
+      "create-recipe.html">＋ <span>New recipe</span></a><a href=
+      "dashboard.html#tasks">✓ <span>Tasks</span></a><a href=
+      "dashboard.html#blogs">✎ <span>My stories</span></a><a href=
+      "dashboard.html#planner">◫ <span>Meal planner</span></a><span class=
+      "side-label">You</span><a href="dashboard.html#favorites">♡
+      <span>Favorites</span></a><a href="dashboard.html#profile">●
+      <span>Profile & settings</span></a><a href=
+      "dashboard.html#subscription">◇ <span>Subscription</span></a>
+    </aside>
+    <main class="workspace">
+      <div class="workspace-top">
+        <div>
+          <span class="eyebrow">monday, november 3</span>
+          <h1>Good morning, Amelia.</h1>
+          <p>Your kitchen has a little momentum today.</p>
+        </div><a class="button button-primary" href="create-recipe.html">＋ New
+        recipe</a>
+      </div>
+      <div class="metric-grid">
+        <div class="metric">
+          <span>Published recipes</span><strong>24</strong><em>↑ 3 this
+          month</em>
+        </div>
+        <div class="metric">
+          <span>Saved by the community</span><strong>1.8k</strong><em>↑ 12%
+          this month</em>
+        </div>
+        <div class="metric">
+          <span>Open tasks</span><strong>07</strong><em>2 due today</em>
+        </div>
+        <div class="metric">
+          <span>Current plan</span><strong>Pro</strong><em>trial · 5 days
+          left</em>
+        </div>
+      </div>
+      <section class="panel" id="recipes">
+        <div class="panel-head">
+          <h2>Your recipes</h2><a class="button button-small button-secondary"
+          href="creator.html">View public profile</a>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Recipe</th>
+                <th>Status</th>
+                <th>Updated</th>
+                <th>Saves</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Sunlit lemon pasta</strong></td>
+                <td><span class="status status-green">Published</span></td>
+                <td>Today</td>
+                <td>284</td>
+                <td>
+                  <a href="create-recipe.html">Edit →</a>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Roasted market plate</strong></td>
+                <td><span class="status status-gold">Draft</span></td>
+                <td>Yesterday</td>
+                <td>—</td>
+                <td>
+                  <a href="create-recipe.html">Continue →</a>
+                </td>
+              </tr>
+              <tr>
+                <td><strong>Sunday table loaf</strong></td>
+                <td><span class="status status-green">Published</span></td>
+                <td>Oct 28</td>
+                <td>192</td>
+                <td>
+                  <a href="recipe.html">View →</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+      <section class="section-tight" style="padding-bottom:0">
+        <div class="detail-grid">
+          <div class="panel" id="tasks">
+            <div class="panel-head">
+              <h2>Today’s small wins</h2><a href="#tasks">See all</a>
+            </div>
+            <div class="activity">
+              <div class="activity-item">
+                <input type="checkbox" aria-label="Buy lemons and parmesan">
+                <p><strong>Buy lemons and parmesan</strong><br>
+                <small>Kitchen · due today</small></p><span class=
+                "status status-red">High</span>
+              </div>
+              <div class="activity-item">
+                <input type="checkbox" aria-label="Edit Sunday loaf notes">
+                <p><strong>Edit Sunday loaf notes</strong><br>
+                <small>Recipe · due today</small></p><span class=
+                "status status-gold">Medium</span>
+              </div>
+              <div class="activity-item">
+                <input type="checkbox" aria-label="Plan Thursday dinner">
+                <p><strong>Plan Thursday dinner</strong><br>
+                <small>Meal planner · tomorrow</small></p><span class=
+                "status status-green">Low</span>
+              </div>
+            </div><a class="button button-secondary button-small" style=
+            "margin-top:20px" href="#tasks">＋ Add a task</a>
+          </div>
+          <div class="panel" id="planner">
+            <div class="panel-head">
+              <h2>This week</h2><a href="#planner">Open planner →</a>
+            </div>
+            <div class="chart" aria-label="Weekly meal plan overview"></div>
+            <div class="meta" style="justify-content:space-between">
+              <span>Mon</span>
+              <span>Tue</span>
+              <span>Wed</span>
+              <span>Thu</span>
+              <span>Fri</span>
+              <span>Sat</span>
+              <span>Sun</span>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="section-tight" style="padding-bottom:0">
+        <div class="detail-grid">
+          <div class="panel" id="blogs">
+            <div class="panel-head">
+              <h2>Story drafts</h2><a href="create-blog.html">＋ New story</a>
+            </div>
+            <p><strong>The long way around the loaf.</strong><br>
+            <span class="meta">Draft · edited 2 hours ago</span></p>
+            <p><strong>What to do with a very good tomato.</strong><br>
+            <span class="meta">Published · 6 comments</span></p>
+          </div>
+          <div class="panel" id="profile">
+            <div class="panel-head">
+              <h2>Your profile</h2><a href="#profile">Edit</a>
+            </div>
+            <div class="author">
+              <span class="avatar">AM</span><span><strong>Amelia
+              Moreau</strong><br>
+              <span class="meta">Paris by way of everywhere</span></span>
+            </div>
+            <p style="color:var(--muted);font-size:.88rem;margin-top:18px">A
+            kitchen notebook for bright plates and long tables.</p>
+          </div>
+        </div>
+      </section>
+      <section class="section-tight" style="padding-bottom:0">
+        <div class="panel" id="subscription">
+          <div class="panel-head">
+            <h2>Pro trial</h2><a class="button button-small button-primary"
+            href="pricing.html">Manage plan</a>
+          </div>
+          <p style="margin:0;color:var(--muted)">You have 5 days left in your
+          free trial. Your recipes and stories are safe with us.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

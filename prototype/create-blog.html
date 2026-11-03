@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Write a story — Recipe Manager</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="shell nav">
+      <a class="brand" href="index.html"><span class="brand-mark">rm</span>
+      recipe manager</a><span class="menu-note">story editor</span>
+      <div class="nav-actions">
+        <a class="button button-secondary" href="dashboard.html">Save
+        draft</a><a class="button button-primary" href="article.html">Preview
+        story</a>
+      </div>
+    </div>
+  </header>
+  <main class="workspace" style="max-width:1180px;margin:auto">
+    <div class="workspace-top">
+      <div>
+        <div class="crumbs">
+          <a href="dashboard.html">Your kitchen</a> / New story
+        </div><span class="eyebrow">make a little room</span>
+        <h1>Write the story.</h1>
+        <p>Share the thought, ritual, or recipe behind the plate.</p>
+      </div><span class="status status-gold">Draft · autosaved</span>
+    </div>
+    <form class="form-layout" action="article.html">
+      <div>
+        <section class="form-panel">
+          <div class="field">
+            <label for="story-title">Title</label><input id="story-title"
+            required="" value="The long way around the loaf.">
+          </div>
+          <div class="field">
+            <label for="story-intro">Opening note</label> 
+            <textarea id=
+            "story-intro">On patience, good butter, and why the best recipes leave a
+            little room for the day you’re having.</textarea>
+          </div>
+          <div class="field">
+            <label for="body">Your story</label> 
+            <textarea id="body" style=
+            "min-height:370px">There is a particular hush that arrives when dough is left
+            to do its own work. The kitchen does not become empty; it becomes observant.
+
+            I used to think a recipe was a set of instructions to obey. Now I think of it
+            as an invitation to pay attention.</textarea>
+          </div>
+        </section>
+      </div>
+      <aside>
+        <section class="form-panel">
+          <div class="upload">
+            <div>
+              <strong>＋ Add a cover image</strong><small>JPG, PNG up to
+              10MB</small>
+            </div>
+          </div>
+          <div class="field" style="margin-top:20px">
+            <label for="category">Category</label><select id="category">
+              <option>
+                Small rituals
+              </option>
+              <option>
+                Seasonal
+              </option>
+              <option>
+                Community
+              </option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="story-tags">Tags</label><input id="story-tags" value=
+            "bread, patience, home">
+          </div><label class="check-row"><input type="checkbox" checked>
+          <span>Publish this story to the community.</span></label>
+          <div class="field-actions" style="margin-top:20px">
+            <button class="button button-primary" type="submit">Publish
+            story</button>
+          </div>
+        </section>
+      </aside>
+    </form>
+  </main>
+</body>
+</html>
