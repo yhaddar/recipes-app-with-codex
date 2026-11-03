@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import com.recipemanager.user.AppUserRepository;
+import com.recipemanager.user.AccountStatus;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -49,8 +50,9 @@ public class SessionAuthenticationFilter extends OncePerRequestFilter {
             if (rawUserId == null) {
                 return;
             }
-            users.findById(UUID.fromString(rawUserId)).ifPresent(user ->
-                    SecurityContextHolder.getContext().setAuthentication(
+            users.findById(UUID.fromString(rawUserId))
+                    .filter(user -> user.getAccountStatus() == AccountStatus.ACTIVE)
+                    .ifPresent(user -> SecurityContextHolder.getContext().setAuthentication(
                             UsernamePasswordAuthenticationToken.authenticated(
                                     user.getId().toString(),
                                     null,

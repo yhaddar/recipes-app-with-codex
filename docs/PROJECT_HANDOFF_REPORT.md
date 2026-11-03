@@ -43,6 +43,12 @@ Continuation state after the audit:
 - `2493b1d` implements AUTH-05 logout invalidation.
 - `d31e29b` implements AUTH-06 session authentication.
 - `71988f2` implements AUTH-07 password recovery/reset.
+- `047bbb6` implements AUTH-09 role lookup.
+- `fa63917` wires role authorities into authenticated sessions for AUTH-10.
+- `d83f536` implements authenticated recipe creation.
+- `2e273ef` implements the routed Angular public shell and landing page.
+- `9a384f1` implements frontend API, token storage, interceptor, and guard foundations.
+- `490569e` implements the Angular login/registration page.
 
 Relevant commit sequence:
 
@@ -137,11 +143,19 @@ Status meanings: **implemented/committed** means source and a task commit exist;
 | AUTH-06 | Implemented/committed after audit | `d31e29b`; bearer session authentication filter and stateless security |
 | AUTH-07 | Implemented/committed after audit | `71988f2`; generic reset request, expiring token, reset workflow |
 | AUTH-08 | Not started | Frontend/authentication error integration remains |
-| AUTH-09–AUTH-14 | Not started | Role management, complete authorization/ownership, account administration, security integration, and OAuth providers remain |
-| FE-01–FE-13 | Incomplete/not started | Angular shell exists; routes are empty and feature architecture/components are absent |
-| FE-AUTH-01–FE-AUTH-08 | Not started | No authentication pages or flows found |
+| AUTH-09 | Implemented/committed after audit | `047bbb6`; role lookup service and repository query |
+| AUTH-10 | Implemented/committed after audit; broader endpoint review remains | `fa63917`; sessions receive `ROLE_*` authorities |
+| AUTH-11–AUTH-14 | Not started/partial | Ownership enforcement, account administration, security integration, and OAuth providers remain |
+| FE-01–FE-03 | Implemented/committed after audit | `2e273ef`; routed public shell, landing page, layout, and responsive design |
+| FE-04–FE-06 | Not started | Authenticated/admin layouts and shared UI components remain |
+| FE-07–FE-09 | Implemented/committed after audit | `9a384f1`; API client, interceptor, storage, and guard foundations |
+| FE-10–FE-13 | Not started | Shared models, validation/error conventions, and UI-language review remain |
+| FE-AUTH-01–FE-AUTH-02 | Implemented/committed after audit | `490569e`; routed login/register page with reactive validation and tests |
+| FE-AUTH-03–FE-AUTH-08 | Not started | Logout, verification, recovery/reset, protected-route and complete error UX remain |
 | PUB-01–PUB-16 | Not started | Prototype exists, but no Angular pages or public APIs are implemented |
-| RECIPE-01–RECIPE-19 | Partial foundation only | Recipe entities/repositories/storage metadata exist; services, controllers, DTOs, ownership, and UI are absent |
+| RECIPE-01 | Partial foundation | Existing entity/repository; mapper coverage remains |
+| RECIPE-02–RECIPE-03 | Implemented/committed after audit | `d83f536`; authenticated create service/controller and tests |
+| RECIPE-04–RECIPE-19 | Not started/partial | Read/update/delete, ingredients, instructions, images, publication, and UI remain |
 | DASH-01–DASH-07 | Not started | No dashboard API/UI |
 | TASK-01–TASK-15 | Partial database foundation only | Task entity/repository/migration exist; API, service, ownership enforcement, and UI are absent |
 | BLOG-01–BLOG-16 | Partial database foundation only | Blog entity/repository/migration exist; full API, content validation, and UI are absent |

@@ -81,4 +81,9 @@ public class AppUser {
         this.accountStatus = AccountStatus.ACTIVE;
         this.updatedAt = this.emailVerifiedAt;
     }
+
+    public void deactivate() {
+        this.accountStatus = AccountStatus.INACTIVE;
+        this.updatedAt = Instant.now();
+    }
 }

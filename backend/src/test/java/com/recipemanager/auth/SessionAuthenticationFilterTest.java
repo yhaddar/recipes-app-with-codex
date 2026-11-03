@@ -29,6 +29,7 @@ class SessionAuthenticationFilterTest {
     void authenticatesBearerSessionForExistingUser() throws Exception {
         UUID id = UUID.randomUUID();
         AppUser user = new AppUser(id, "cook@example.com", "Ada", "Cook");
+        user.verifyEmail();
         StringRedisTemplate redis = mock(StringRedisTemplate.class);
         ValueOperations<String, String> values = mock(ValueOperations.class);
         when(redis.opsForValue()).thenReturn(values);
@@ -46,6 +47,27 @@ class SessionAuthenticationFilterTest {
 
         assertThat(SecurityContextHolder.getContext().getAuthentication().isAuthenticated()).isTrue();
         assertThat(SecurityContextHolder.getContext().getAuthentication().getName()).isEqualTo(id.toString());
+    }
+
+    @Test
+    void doesNotAuthenticateDeactivatedUserWithExistingSession() throws Exception {
+        UUID id = UUID.randomUUID();
+        AppUser user = new AppUser(id, "cook@example.com", "Ada", "Cook");
+        user.verifyEmail();
+        user.deactivate();
+        StringRedisTemplate redis = mock(StringRedisTemplate.class);
+        ValueOperations<String, String> values = mock(ValueOperations.class);
+        when(redis.opsForValue()).thenReturn(values);
+        when(values.get("recipe-manager:session:token")).thenReturn(id.toString());
+        AppUserRepository users = mock(AppUserRepository.class);
+        when(users.findById(id)).thenReturn(Optional.of(user));
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addHeader("Authorization", "Bearer token");
+        new SessionAuthenticationFilter(redis, users, mock(RoleService.class))
+                .doFilter(request, new MockHttpServletResponse(), mock(FilterChain.class));
+
+        assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
     }
 
     @Test
