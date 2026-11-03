@@ -20,16 +20,19 @@ public class RegistrationService {
     private final RoleRepository roles;
     private final UserRoleRepository userRoles;
     private final PasswordEncoder passwordEncoder;
+    private final EmailVerificationService verificationService;
 
     public RegistrationService(
             AppUserRepository users,
             RoleRepository roles,
             UserRoleRepository userRoles,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder,
+            EmailVerificationService verificationService) {
         this.users = users;
         this.roles = roles;
         this.userRoles = userRoles;
         this.passwordEncoder = passwordEncoder;
+        this.verificationService = verificationService;
     }
 
     @Transactional
@@ -45,6 +48,7 @@ public class RegistrationService {
         user.updatePasswordHash(passwordEncoder.encode(request.password()));
         users.save(user);
         userRoles.save(new UserRole(user, role));
+        verificationService.issueToken(user.getId(), user.getEmail());
         return new RegistrationResponse(user.getId(), user.getEmail(), user.getAccountStatus().name());
     }
 }
