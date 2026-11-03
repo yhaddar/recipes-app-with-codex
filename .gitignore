@@ -1,0 +1,20 @@
+# Java / Maven
+backend/target/
+backend/logs/
+
+# Angular / Node
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/out-tsc/
+
+# Local environment files
+**/.env
+**/.env.*
+!.env.example
+
+# IDE and OS files
+.idea/
+.vscode/
+.DS_Store
+.metals/
