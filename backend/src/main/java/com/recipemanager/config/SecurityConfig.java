@@ -2,8 +2,9 @@ package com.recipemanager.config;
 
 import java.util.Arrays;
 import java.util.Set;
+import java.util.List;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import com.recipemanager.ratelimit.ClientIpResolver;
 import com.recipemanager.ratelimit.RateLimitFilter;
 import com.recipemanager.ratelimit.RateLimitService;
@@ -21,60 +22,72 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.config.Customizer;
 
 @Configuration
 @EnableMethodSecurity
 @EnableConfigurationProperties(com.recipemanager.ratelimit.RateLimitProperties.class)
 public class SecurityConfig {
 
-    @Bean
-    PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
+	@Bean
+	PasswordEncoder passwordEncoder() {
+		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+	}
 
-    @Bean
-    ClientIpResolver clientIpResolver(
-            @Value("${app.rate-limit.trusted-proxies:}") String configuredProxies) {
-        Set<String> trustedProxies = Arrays.stream(configuredProxies.split(","))
-                .map(String::trim)
-                .filter(value -> !value.isBlank())
-                .collect(java.util.stream.Collectors.toUnmodifiableSet());
-        return new ClientIpResolver(trustedProxies);
-    }
+	@Bean
+	ClientIpResolver clientIpResolver(@Value("${app.rate-limit.trusted-proxies:}") String configuredProxies) {
+		Set<String> trustedProxies = Arrays.stream(configuredProxies.split(",")).map(String::trim)
+				.filter(value -> !value.isBlank()).collect(java.util.stream.Collectors.toUnmodifiableSet());
+		return new ClientIpResolver(trustedProxies);
+	}
 
-    @Bean
-    RateLimitFilter rateLimitFilter(
-            RateLimitService rateLimitService,
-            ClientIpResolver clientIpResolver,
-            ObjectMapper objectMapper) {
-        return new RateLimitFilter(rateLimitService, clientIpResolver, objectMapper);
-    }
+	@Bean
+	RateLimitFilter rateLimitFilter(RateLimitService rateLimitService, ClientIpResolver clientIpResolver,
+			JsonMapper objectMapper) {
+		return new RateLimitFilter(rateLimitService, clientIpResolver, objectMapper);
+	}
 
-    @Bean
-    SessionAuthenticationFilter sessionAuthenticationFilter(
-            org.springframework.data.redis.core.StringRedisTemplate redis,
-            AppUserRepository users,
-            com.recipemanager.auth.RoleService roleService) {
-        return new SessionAuthenticationFilter(redis, users, roleService);
-    }
+	@Bean
+	SessionAuthenticationFilter sessionAuthenticationFilter(
+			org.springframework.data.redis.core.StringRedisTemplate redis, AppUserRepository users,
+			com.recipemanager.auth.RoleService roleService, JsonMapper objectMapper) {
+		return new SessionAuthenticationFilter(redis, users, roleService, objectMapper);
+	}
 
-    @Bean
-    SecurityFilterChain applicationSecurity(
-            HttpSecurity http,
-            RateLimitFilter rateLimitFilter,
-            SessionAuthenticationFilter sessionAuthenticationFilter) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                .addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(sessionAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/health", "/api/auth/register", "/api/auth/login", "/api/auth/verify-email", "/api/auth/forgot-password", "/api/auth/reset-password", "/actuator/health", "/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
-                        .permitAll()
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .anyRequest()
-                        .authenticated());
+	@Bean
+	SecurityFilterChain applicationSecurity(HttpSecurity http, RateLimitFilter rateLimitFilter,
+			SessionAuthenticationFilter sessionAuthenticationFilter) throws Exception {
+		http.csrf(AbstractHttpConfigurer::disable)
+				.addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class)
+				.addFilterBefore(sessionAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.authorizeHttpRequests(authorize -> authorize
+						.requestMatchers("/api/health", "/api/auth/register", "/api/auth/login",
+								"/actuator/health", "/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
+						.permitAll().requestMatchers("/api/admin/**").hasRole("ADMIN").anyRequest().authenticated());
+        http.cors(Customizer.withDefaults());
+		return http.build();
+	}
 
-        return http.build();
-    }
+	@Bean
+	CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+
+		configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+
+		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+
+		configuration.setAllowedHeaders(List.of("*"));
+
+		configuration.setAllowCredentials(true);
+
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
+		source.registerCorsConfiguration("/**", configuration);
+
+		return source;
+	}
 }

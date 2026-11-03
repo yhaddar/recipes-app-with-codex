@@ -2,6 +2,7 @@ package com.recipemanager.auth;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
@@ -9,7 +10,9 @@ import java.util.UUID;
 
 import com.recipemanager.user.AppUser;
 import com.recipemanager.user.AppUserRepository;
+import tools.jackson.databind.json.JsonMapper;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -40,7 +43,7 @@ class SessionAuthenticationFilterTest {
         RoleService roles = mock(RoleService.class);
         when(roles.roleNamesFor(id)).thenReturn(java.util.Set.of(com.recipemanager.role.RoleName.USER));
         FilterChain chain = mock(FilterChain.class);
-        SessionAuthenticationFilter filter = new SessionAuthenticationFilter(redis, users, roles);
+        SessionAuthenticationFilter filter = new SessionAuthenticationFilter(redis, users, roles, new JsonMapper());
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addHeader("Authorization", "Bearer token");
 
@@ -66,7 +69,7 @@ class SessionAuthenticationFilterTest {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addHeader("Authorization", "Bearer token");
-        new SessionAuthenticationFilter(redis, users, mock(RoleService.class))
+        new SessionAuthenticationFilter(redis, users, mock(RoleService.class), new JsonMapper())
                 .doFilter(request, new MockHttpServletResponse(), mock(FilterChain.class));
 
         assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
@@ -91,7 +94,7 @@ class SessionAuthenticationFilterTest {
         adminUsers.deactivate(id);
         adminUsers.activate(id);
 
-        new SessionAuthenticationFilter(redis, users, mock(RoleService.class))
+        new SessionAuthenticationFilter(redis, users, mock(RoleService.class), new JsonMapper())
                 .doFilter(request, new MockHttpServletResponse(), mock(FilterChain.class));
 
         assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
@@ -104,12 +107,32 @@ class SessionAuthenticationFilterTest {
         when(redis.opsForValue()).thenReturn(values);
         when(values.get("recipe-manager:session:unknown")).thenReturn(null);
         SessionAuthenticationFilter filter = new SessionAuthenticationFilter(
-                redis, mock(AppUserRepository.class), mock(RoleService.class));
+                redis, mock(AppUserRepository.class), mock(RoleService.class), new JsonMapper());
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addHeader("Authorization", "Bearer unknown");
 
         filter.doFilter(request, new MockHttpServletResponse(), mock(FilterChain.class));
 
         assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
+    }
+
+    @Test
+    void returnsServiceUnavailableWhenRedisLookupFails() throws Exception {
+        StringRedisTemplate redis = mock(StringRedisTemplate.class);
+        ValueOperations<String, String> values = mock(ValueOperations.class);
+        when(redis.opsForValue()).thenReturn(values);
+        when(values.get("recipe-manager:session:token")).thenThrow(new RuntimeException("redis unavailable"));
+        FilterChain chain = mock(FilterChain.class);
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addHeader("Authorization", "Bearer token");
+        MockHttpServletResponse response = new MockHttpServletResponse();
+
+        new SessionAuthenticationFilter(
+                redis, mock(AppUserRepository.class), mock(RoleService.class), new JsonMapper())
+                .doFilter(request, response, chain);
+
+        assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+        assertThat(response.getContentAsString()).contains("Authentication is temporarily unavailable.");
+        org.mockito.Mockito.verify(chain, never()).doFilter(request, response);
     }
 }

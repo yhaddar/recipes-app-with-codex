@@ -2,12 +2,12 @@ package com.recipemanager.dto.response;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import org.junit.jupiter.api.Test;
 
 class ApiResponseTest {
 
-    private final ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
+    private final JsonMapper objectMapper = new JsonMapper();
 
     @Test
     void createsSuccessfulResponseWithPayloadAndTimestamp() {

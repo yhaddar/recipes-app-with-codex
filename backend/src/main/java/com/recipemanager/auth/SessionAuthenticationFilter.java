@@ -1,8 +1,12 @@
 package com.recipemanager.auth;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.util.Map;
 import java.util.UUID;
 
+import tools.jackson.databind.json.JsonMapper;
+import com.recipemanager.dto.response.ApiErrorResponse;
 import com.recipemanager.user.AppUserRepository;
 import com.recipemanager.user.AccountStatus;
 import jakarta.servlet.FilterChain;
@@ -22,11 +26,17 @@ public class SessionAuthenticationFilter extends OncePerRequestFilter {
     private final StringRedisTemplate redis;
     private final AppUserRepository users;
     private final RoleService roleService;
+    private final JsonMapper objectMapper;
 
-    public SessionAuthenticationFilter(StringRedisTemplate redis, AppUserRepository users, RoleService roleService) {
+    public SessionAuthenticationFilter(
+            StringRedisTemplate redis,
+            AppUserRepository users,
+            RoleService roleService,
+            JsonMapper objectMapper) {
         this.redis = redis;
         this.users = users;
         this.roleService = roleService;
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -36,7 +46,12 @@ public class SessionAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain) throws ServletException, IOException {
         String authorization = request.getHeader("Authorization");
         if (authorization != null && authorization.startsWith("Bearer ")) {
-            authenticate(authorization.substring("Bearer ".length()).trim());
+            try {
+                authenticate(authorization.substring("Bearer ".length()).trim());
+            } catch (RuntimeException exception) {
+                writeUnavailable(response, request.getRequestURI());
+                return;
+            }
         }
         filterChain.doFilter(request, response);
     }
@@ -68,5 +83,17 @@ public class SessionAuthenticationFilter extends OncePerRequestFilter {
         } catch (IllegalArgumentException ignored) {
             // Invalid tokens are treated as unauthenticated and are rejected by Spring Security.
         }
+    }
+
+    private void writeUnavailable(HttpServletResponse response, String path) throws IOException {
+        response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+        response.setContentType("application/json");
+        objectMapper.writeValue(response.getWriter(), new ApiErrorResponse(
+                Instant.now(),
+                HttpServletResponse.SC_SERVICE_UNAVAILABLE,
+                "Service Unavailable",
+                "Authentication is temporarily unavailable.",
+                path,
+                Map.of()));
     }
 }

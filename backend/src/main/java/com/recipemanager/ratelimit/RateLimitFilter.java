@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 import com.recipemanager.dto.response.ApiErrorResponse;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -17,12 +17,12 @@ public class RateLimitFilter extends OncePerRequestFilter {
 
     private final RateLimitService rateLimitService;
     private final ClientIpResolver clientIpResolver;
-    private final ObjectMapper objectMapper;
+    private final JsonMapper objectMapper;
 
     public RateLimitFilter(
             RateLimitService rateLimitService,
             ClientIpResolver clientIpResolver,
-            ObjectMapper objectMapper) {
+            JsonMapper objectMapper) {
         this.rateLimitService = rateLimitService;
         this.clientIpResolver = clientIpResolver;
         this.objectMapper = objectMapper;

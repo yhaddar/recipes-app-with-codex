@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doAnswer;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -27,22 +28,27 @@ class RegistrationServiceTest {
     private final RoleRepository roles = org.mockito.Mockito.mock(RoleRepository.class);
     private final UserRoleRepository userRoles = org.mockito.Mockito.mock(UserRoleRepository.class);
     private final PasswordEncoder passwordEncoder = org.mockito.Mockito.mock(PasswordEncoder.class);
-    private final EmailVerificationService verificationService = org.mockito.Mockito.mock(EmailVerificationService.class);
     private final RegistrationService service = new RegistrationService(
-            users, roles, userRoles, passwordEncoder, verificationService);
+            users, roles, userRoles, passwordEncoder);
 
     @Test
-    void registersPendingUserWithHashedPasswordAndUserRole() {
+    void registersActiveUserWithHashedPasswordAndUserRole() {
         Role userRole = new Role(UUID.randomUUID(), RoleName.USER);
         when(users.findByEmailIgnoreCase("cook@example.com")).thenReturn(Optional.empty());
         when(roles.findByName(RoleName.USER)).thenReturn(Optional.of(userRole));
         when(passwordEncoder.encode("Secret123!")) .thenReturn("{bcrypt}hash");
+        doAnswer(invocation -> {
+            AppUser savedUser = invocation.getArgument(0);
+            assertThat(savedUser.getAccountStatus()).isEqualTo(com.recipemanager.user.AccountStatus.ACTIVE);
+            assertThat(savedUser.getPasswordHash()).isEqualTo("{bcrypt}hash");
+            return savedUser;
+        }).when(users).save(any(AppUser.class));
 
         RegistrationResponse response = service.register(
                 new RegistrationRequest(" Cook@Example.com ", "Secret123!", "Ada", "Cook"));
 
         assertThat(response.email()).isEqualTo("cook@example.com");
-        assertThat(response.accountStatus()).isEqualTo("PENDING");
+        assertThat(response.accountStatus()).isEqualTo("ACTIVE");
         verify(passwordEncoder).encode("Secret123!");
         verify(users).save(any(AppUser.class));
         verify(userRoles).save(any());
