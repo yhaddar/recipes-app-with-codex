@@ -82,4 +82,15 @@ public class Recipe {
     public PublicationStatus getPublicationStatus() {
         return publicationStatus;
     }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void updateDetails(String description, Integer totalTimeMinutes, Difficulty difficulty) {
+        this.description = description;
+        this.totalTimeMinutes = totalTimeMinutes;
+        this.difficulty = difficulty;
+        this.updatedAt = Instant.now();
+    }
 }

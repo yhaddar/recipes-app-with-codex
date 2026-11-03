@@ -6,6 +6,7 @@ import java.util.Map;
 import com.recipemanager.dto.response.ApiErrorResponse;
 import com.recipemanager.auth.DuplicateResourceException;
 import com.recipemanager.auth.InvalidCredentialsException;
+import com.recipemanager.recipe.ResourceNotFoundException;
 import com.recipemanager.validation.ValidationErrorMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -53,6 +54,13 @@ public class GlobalExceptionHandler {
             InvalidCredentialsException exception,
             HttpServletRequest request) {
         return error(HttpStatus.UNAUTHORIZED, "Invalid email or password", request, Map.of());
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    ResponseEntity<ApiErrorResponse> handleNotFound(
+            ResourceNotFoundException exception,
+            HttpServletRequest request) {
+        return error(HttpStatus.NOT_FOUND, exception.getMessage(), request, Map.of());
     }
 
     @ExceptionHandler(AuthenticationException.class)
