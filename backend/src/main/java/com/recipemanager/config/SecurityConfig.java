@@ -13,12 +13,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableConfigurationProperties(com.recipemanager.ratelimit.RateLimitProperties.class)
 public class SecurityConfig {
+
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+    }
 
     @Bean
     ClientIpResolver clientIpResolver(
@@ -44,7 +51,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/health", "/actuator/health", "/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
+                        .requestMatchers("/api/health", "/api/auth/register", "/actuator/health", "/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
                         .permitAll()
                         .anyRequest()
                         .authenticated());

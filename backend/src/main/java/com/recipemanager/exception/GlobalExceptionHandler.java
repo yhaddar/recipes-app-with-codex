@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.Map;
 
 import com.recipemanager.dto.response.ApiErrorResponse;
+import com.recipemanager.auth.DuplicateResourceException;
 import com.recipemanager.validation.ValidationErrorMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -37,6 +38,13 @@ public class GlobalExceptionHandler {
             IllegalArgumentException exception,
             HttpServletRequest request) {
         return error(HttpStatus.BAD_REQUEST, exception.getMessage(), request, Map.of());
+    }
+
+    @ExceptionHandler(DuplicateResourceException.class)
+    ResponseEntity<ApiErrorResponse> handleConflict(
+            DuplicateResourceException exception,
+            HttpServletRequest request) {
+        return error(HttpStatus.CONFLICT, exception.getMessage(), request, Map.of());
     }
 
     @ExceptionHandler(AuthenticationException.class)
