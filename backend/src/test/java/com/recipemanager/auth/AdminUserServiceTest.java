@@ -40,15 +40,19 @@ class AdminUserServiceTest {
     void activatesInactiveAccountAndReturnsCurrentStatus() {
         AppUserRepository users = org.mockito.Mockito.mock(AppUserRepository.class);
         StringRedisTemplate redis = org.mockito.Mockito.mock(StringRedisTemplate.class);
+        ValueOperations<String, String> values = org.mockito.Mockito.mock(ValueOperations.class);
+        when(redis.opsForValue()).thenReturn(values);
         UUID id = UUID.randomUUID();
         AppUser user = new AppUser(id, "cook@example.com", "Ada", "Cook");
         user.verifyEmail();
         user.deactivate();
         when(users.findById(id)).thenReturn(Optional.of(user));
+        when(values.increment(LoginService.SESSION_VERSION_PREFIX + id)).thenReturn(2L);
 
         AccountStatusResponse response = new AdminUserService(users, redis).activate(id);
 
         assertThat(response.accountStatus()).isEqualTo("ACTIVE");
         verify(users).save(any(AppUser.class));
+        verify(redis.opsForValue()).increment(LoginService.SESSION_VERSION_PREFIX + id);
     }
 }

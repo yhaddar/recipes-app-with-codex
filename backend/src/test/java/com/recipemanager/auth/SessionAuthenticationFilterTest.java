@@ -82,10 +82,15 @@ class SessionAuthenticationFilterTest {
         when(redis.opsForValue()).thenReturn(values);
         when(values.get("recipe-manager:session:token")).thenReturn(id + ":1");
         when(values.get(LoginService.SESSION_VERSION_PREFIX + id)).thenReturn("2");
+        when(values.increment(LoginService.SESSION_VERSION_PREFIX + id)).thenReturn(1L, 2L);
         AppUserRepository users = mock(AppUserRepository.class);
         when(users.findById(id)).thenReturn(Optional.of(user));
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addHeader("Authorization", "Bearer token");
+
+        AdminUserService adminUsers = new AdminUserService(users, redis);
+        adminUsers.deactivate(id);
+        adminUsers.activate(id);
 
         new SessionAuthenticationFilter(redis, users, mock(RoleService.class))
                 .doFilter(request, new MockHttpServletResponse(), mock(FilterChain.class));

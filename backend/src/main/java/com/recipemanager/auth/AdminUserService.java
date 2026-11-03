@@ -26,11 +26,7 @@ public class AdminUserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User was not found"));
         user.deactivate();
         users.save(user);
-        String versionKey = LoginService.SESSION_VERSION_PREFIX + user.getId();
-        Long newVersion = redis.opsForValue().increment(versionKey);
-        if (newVersion != null && newVersion == 1L) {
-            redis.opsForValue().set(versionKey, "2");
-        }
+        bumpSessionVersion(user.getId());
         return new AccountStatusResponse(user.getId(), user.getAccountStatus().name());
     }
 
@@ -40,6 +36,15 @@ public class AdminUserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User was not found"));
         user.activate();
         users.save(user);
+        bumpSessionVersion(user.getId());
         return new AccountStatusResponse(user.getId(), user.getAccountStatus().name());
+    }
+
+    private void bumpSessionVersion(UUID userId) {
+        String versionKey = LoginService.SESSION_VERSION_PREFIX + userId;
+        Long newVersion = redis.opsForValue().increment(versionKey);
+        if (newVersion != null && newVersion == 1L) {
+            redis.opsForValue().set(versionKey, "2");
+        }
     }
 }

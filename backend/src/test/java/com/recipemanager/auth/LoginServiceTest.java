@@ -27,7 +27,8 @@ class LoginServiceTest {
         AppUserRepository users = org.mockito.Mockito.mock(AppUserRepository.class);
         PasswordEncoder encoder = org.mockito.Mockito.mock(PasswordEncoder.class);
         AppUser user = new AppUser(UUID.randomUUID(), "cook@example.com", "Ada", "Cook");
-        when(values.get(LoginService.SESSION_VERSION_PREFIX + user.getId())).thenReturn(null);
+        when(redis.execute(any(), eq(java.util.List.of(LoginService.SESSION_VERSION_PREFIX + user.getId()))))
+                .thenReturn("1");
         user.updatePasswordHash("{bcrypt}hash");
         user.verifyEmail();
         when(users.findByEmailIgnoreCase("cook@example.com")).thenReturn(Optional.of(user));
