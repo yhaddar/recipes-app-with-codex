@@ -6,7 +6,7 @@ import { AuthStorageService } from '../services/auth-storage.service';
 import { ApiClientService } from '../services/api-client.service';
 
 describe('authInterceptor', () => {
-  it('adds the bearer token to protected API requests', () => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         ApiClientService,
@@ -15,10 +15,35 @@ describe('authInterceptor', () => {
         provideHttpClientTesting(),
       ],
     });
+  });
+
+  afterEach(() => TestBed.inject(HttpTestingController).verify());
+
+  it('adds the bearer token to protected API requests', () => {
     TestBed.inject(AuthStorageService).saveToken('test-token');
     TestBed.inject(ApiClientService).get('/recipes').subscribe();
 
     const request = TestBed.inject(HttpTestingController).expectOne('http://localhost:8080/api/recipes');
+    expect(request.request.headers.get('Authorization')).toBe('Bearer test-token');
+    request.flush({});
+  });
+
+  it('does not attach a token to public reset links with query parameters', () => {
+    TestBed.inject(AuthStorageService).saveToken('test-token');
+    TestBed.inject(ApiClientService).get('/auth/reset-password?token=one').subscribe();
+
+    const request = TestBed.inject(HttpTestingController).expectOne(
+      'http://localhost:8080/api/auth/reset-password?token=one',
+    );
+    expect(request.request.headers.has('Authorization')).toBeFalse();
+    request.flush({});
+  });
+
+  it('does not treat a similarly named non-auth endpoint as public', () => {
+    TestBed.inject(AuthStorageService).saveToken('test-token');
+    TestBed.inject(ApiClientService).get('/not-auth/login').subscribe();
+
+    const request = TestBed.inject(HttpTestingController).expectOne('http://localhost:8080/api/not-auth/login');
     expect(request.request.headers.get('Authorization')).toBe('Bearer test-token');
     request.flush({});
   });

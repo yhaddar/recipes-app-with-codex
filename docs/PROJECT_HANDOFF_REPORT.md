@@ -7,7 +7,7 @@
 
 ## Executive status
 
-The repository is an active Version 2 implementation, not an empty setup project. The current continuation branch is `feat/auth-07-password-recovery`; the worktree is clean. The latest continuation commit is `71988f2` (`feat(auth): add password recovery flow`).
+The repository is an active Version 2 implementation, not an empty setup project. The current continuation branch is `fix/auth-reactivation-and-interceptor`; the worktree is clean. The latest security continuation commit is `ff18dd1` (`fix(auth): atomically advance session revocations`).
 
 The committed work establishes most of the project/database foundation, backend-core conventions, rate limiting, and an expanding authentication foundation. The application is not yet a complete Version 2 application. Most feature APIs, frontend application behavior, CI, end-to-end coverage, visual regression evidence, independent code review evidence, and the final test report remain outstanding.
 
@@ -49,6 +49,8 @@ Continuation state after the audit:
 - `2e273ef` implements the routed Angular public shell and landing page.
 - `9a384f1` implements frontend API, token storage, interceptor, and guard foundations.
 - `490569e` implements the Angular login/registration page.
+- `bbc6c15`/`d5c692b` implement authorized admin account deactivation with tests.
+- `571c4dd` through `ff18dd1` remediate review findings, add reactivation, exact auth-path matching, and atomic session-generation revocation.
 
 Relevant commit sequence:
 
@@ -145,7 +147,10 @@ Status meanings: **implemented/committed** means source and a task commit exist;
 | AUTH-08 | Not started | Frontend/authentication error integration remains |
 | AUTH-09 | Implemented/committed after audit | `047bbb6`; role lookup service and repository query |
 | AUTH-10 | Implemented/committed after audit; broader endpoint review remains | `fa63917`; sessions receive `ROLE_*` authorities |
-| AUTH-11–AUTH-14 | Not started/partial | Ownership enforcement, account administration, security integration, and OAuth providers remain |
+| AUTH-11 | Partial | Recipe creation checks owner identity; complete resource ownership matrix remains |
+| AUTH-12 | Implemented/committed after audit | `bbc6c15`, `d5c692b`, `571c4dd`; authorized activate/deactivate workflow and session revocation |
+| AUTH-13 | Partial | Focused security tests and independent review passed; full HTTP/integration matrix remains |
+| AUTH-14 | Not started | Google/Facebook OAuth flows, linking, callbacks, and provider configuration remain |
 | FE-01–FE-03 | Implemented/committed after audit | `2e273ef`; routed public shell, landing page, layout, and responsive design |
 | FE-04–FE-06 | Not started | Authenticated/admin layouts and shared UI components remain |
 | FE-07–FE-09 | Implemented/committed after audit | `9a384f1`; API client, interceptor, storage, and guard foundations |
@@ -169,17 +174,17 @@ Status meanings: **implemented/committed** means source and a task commit exist;
 
 | Tasks | Assessment | Evidence / gap |
 |---|---|---|
-| QA-01–QA-22 | Not started / not complete | No `TEST_REPORT.md`, full-suite evidence, E2E evidence, visual-regression evidence, independent complete review, Jenkins review, or final completion report found |
+| QA-01–QA-22 | Not started / not complete | Focused backend/frontend evidence and independent review exist; no `TEST_REPORT.md`, full-suite/database evidence, E2E, visual-regression, Jenkins, or final completion evidence |
 
 ## Existing tests and verification state
 
 Test files exist for Java runtime, configuration, response/error DTOs, logging, storage, email, OpenAPI, repository/database relationships, migrations, seed data, and Redis/PostgreSQL integration. Their presence is not treated as execution proof.
 
-During this audit, no database-backed test suite was claimed as passed because the tests use PostgreSQL profiles and Flyway and therefore require an explicitly controlled database/migration execution context. Frontend dependencies are present locally, but frontend build/test/lint commands were not yet used as completion evidence at the time of this report creation.
+Focused post-audit verification: backend auth/rate-limit/mapper/recipe tests passed in the executed Maven selections, backend package builds passed, and the latest Angular suite passed 9/9 with lint and production build passing. No database-backed test suite was claimed as passed because the tests use PostgreSQL profiles and Flyway and therefore require an explicitly controlled database/migration execution context.
 
 ## Continuation point
 
-At the end of the initial audit, BE-10 was the active continuation point. That task and the next directly useful backend/authentication tasks are now committed. The next incomplete roadmap task is AUTH-08, followed by role/authorization hardening and the frontend foundation. The report should continue to distinguish implementation commits from complete acceptance evidence.
+At the end of this continuation, the next incomplete roadmap task is the remaining AUTH-08 frontend error UX/protected-route test coverage, followed by the large remaining public recipe/blog/community/planner/profile/subscription/admin feature set. The report continues to distinguish implementation commits from complete acceptance evidence.
 
 ## Blockers and risks
 
@@ -191,7 +196,7 @@ At the end of the initial audit, BE-10 was the active continuation point. That t
 
 ## Recommended next task
 
-Proceed with **AUTH-08** on a dedicated branch: complete frontend/API authentication error handling and its tests, then continue through authorization and frontend foundation. Live Redis/PostgreSQL/SMTP, E2E, visual regression, and independent read-only review evidence remain separate verification gaps.
+Proceed with **AUTH-08** on a dedicated branch: complete frontend/API authentication error handling and its tests, then continue through the remaining feature phases. Live Redis/PostgreSQL/SMTP, E2E, visual regression, and full HTTP authorization evidence remain separate verification gaps.
 
 ## Audit conclusion
 

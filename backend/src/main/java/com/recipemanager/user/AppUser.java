@@ -86,4 +86,9 @@ public class AppUser {
         this.accountStatus = AccountStatus.INACTIVE;
         this.updatedAt = Instant.now();
     }
+
+    public void activate() {
+        this.accountStatus = AccountStatus.ACTIVE;
+        this.updatedAt = Instant.now();
+    }
 }
