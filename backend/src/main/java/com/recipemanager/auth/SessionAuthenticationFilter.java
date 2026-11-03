@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 public class SessionAuthenticationFilter extends OncePerRequestFilter {
@@ -19,10 +20,12 @@ public class SessionAuthenticationFilter extends OncePerRequestFilter {
 
     private final StringRedisTemplate redis;
     private final AppUserRepository users;
+    private final RoleService roleService;
 
-    public SessionAuthenticationFilter(StringRedisTemplate redis, AppUserRepository users) {
+    public SessionAuthenticationFilter(StringRedisTemplate redis, AppUserRepository users, RoleService roleService) {
         this.redis = redis;
         this.users = users;
+        this.roleService = roleService;
     }
 
     @Override
@@ -49,7 +52,11 @@ public class SessionAuthenticationFilter extends OncePerRequestFilter {
             users.findById(UUID.fromString(rawUserId)).ifPresent(user ->
                     SecurityContextHolder.getContext().setAuthentication(
                             UsernamePasswordAuthenticationToken.authenticated(
-                                    user.getId().toString(), null, java.util.List.of())));
+                                    user.getId().toString(),
+                                    null,
+                                    roleService.roleNamesFor(user.getId()).stream()
+                                            .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
+                                            .toList())));
         } catch (IllegalArgumentException ignored) {
             // Invalid tokens are treated as unauthenticated and are rejected by Spring Security.
         }

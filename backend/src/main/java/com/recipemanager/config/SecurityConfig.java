@@ -51,8 +51,9 @@ public class SecurityConfig {
     @Bean
     SessionAuthenticationFilter sessionAuthenticationFilter(
             org.springframework.data.redis.core.StringRedisTemplate redis,
-            AppUserRepository users) {
-        return new SessionAuthenticationFilter(redis, users);
+            AppUserRepository users,
+            com.recipemanager.auth.RoleService roleService) {
+        return new SessionAuthenticationFilter(redis, users, roleService);
     }
 
     @Bean

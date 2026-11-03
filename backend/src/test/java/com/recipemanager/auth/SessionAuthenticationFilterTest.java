@@ -35,8 +35,10 @@ class SessionAuthenticationFilterTest {
         when(values.get("recipe-manager:session:token")).thenReturn(id.toString());
         AppUserRepository users = mock(AppUserRepository.class);
         when(users.findById(id)).thenReturn(Optional.of(user));
+        RoleService roles = mock(RoleService.class);
+        when(roles.roleNamesFor(id)).thenReturn(java.util.Set.of(com.recipemanager.role.RoleName.USER));
         FilterChain chain = mock(FilterChain.class);
-        SessionAuthenticationFilter filter = new SessionAuthenticationFilter(redis, users);
+        SessionAuthenticationFilter filter = new SessionAuthenticationFilter(redis, users, roles);
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addHeader("Authorization", "Bearer token");
 
@@ -52,7 +54,8 @@ class SessionAuthenticationFilterTest {
         ValueOperations<String, String> values = mock(ValueOperations.class);
         when(redis.opsForValue()).thenReturn(values);
         when(values.get("recipe-manager:session:unknown")).thenReturn(null);
-        SessionAuthenticationFilter filter = new SessionAuthenticationFilter(redis, mock(AppUserRepository.class));
+        SessionAuthenticationFilter filter = new SessionAuthenticationFilter(
+                redis, mock(AppUserRepository.class), mock(RoleService.class));
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addHeader("Authorization", "Bearer unknown");
 
