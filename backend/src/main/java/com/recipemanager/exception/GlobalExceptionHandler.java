@@ -2,9 +2,9 @@ package com.recipemanager.exception;
 
 import java.time.Instant;
 import java.util.Map;
-import java.util.TreeMap;
 
 import com.recipemanager.dto.response.ApiErrorResponse;
+import com.recipemanager.validation.ValidationErrorMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,11 +25,11 @@ public class GlobalExceptionHandler {
     ResponseEntity<ApiErrorResponse> handleValidation(
             MethodArgumentNotValidException exception,
             HttpServletRequest request) {
-        Map<String, String> fieldErrors = new TreeMap<>();
-        exception.getBindingResult().getFieldErrors()
-                .forEach(error -> fieldErrors.putIfAbsent(error.getField(), error.getDefaultMessage()));
-
-        return error(HttpStatus.BAD_REQUEST, "Validation failed", request, fieldErrors);
+        return error(
+                HttpStatus.BAD_REQUEST,
+                "Validation failed",
+                request,
+                ValidationErrorMapper.toFieldErrors(exception.getBindingResult()));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
