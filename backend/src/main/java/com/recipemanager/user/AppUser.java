@@ -67,6 +67,10 @@ public class AppUser {
         return accountStatus;
     }
 
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
     public void updatePasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
         this.updatedAt = Instant.now();
