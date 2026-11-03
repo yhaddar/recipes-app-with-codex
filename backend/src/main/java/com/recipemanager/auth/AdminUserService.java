@@ -26,7 +26,11 @@ public class AdminUserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User was not found"));
         user.deactivate();
         users.save(user);
-        redis.opsForValue().increment(LoginService.SESSION_VERSION_PREFIX + user.getId());
+        String versionKey = LoginService.SESSION_VERSION_PREFIX + user.getId();
+        Long newVersion = redis.opsForValue().increment(versionKey);
+        if (newVersion != null && newVersion == 1L) {
+            redis.opsForValue().set(versionKey, "2");
+        }
         return new AccountStatusResponse(user.getId(), user.getAccountStatus().name());
     }
 

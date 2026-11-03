@@ -23,6 +23,7 @@ class AdminUserServiceTest {
         ValueOperations<String, String> values = org.mockito.Mockito.mock(ValueOperations.class);
         when(redis.opsForValue()).thenReturn(values);
         UUID id = UUID.randomUUID();
+        when(values.increment(LoginService.SESSION_VERSION_PREFIX + id)).thenReturn(1L);
         AppUser user = new AppUser(id, "cook@example.com", "Ada", "Cook");
         user.verifyEmail();
         when(users.findById(id)).thenReturn(Optional.of(user));
@@ -32,6 +33,7 @@ class AdminUserServiceTest {
         assertThat(response.accountStatus()).isEqualTo("INACTIVE");
         verify(users).save(any(AppUser.class));
         verify(redis.opsForValue()).increment(LoginService.SESSION_VERSION_PREFIX + id);
+        verify(values).set(LoginService.SESSION_VERSION_PREFIX + id, "2");
     }
 
     @Test
