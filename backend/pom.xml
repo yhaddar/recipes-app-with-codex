@@ -19,6 +19,7 @@
 
     <properties>
         <java.version>25</java.version>
+        <maven.compiler.release>25</maven.compiler.release>
         <springdoc.version>3.0.0</springdoc.version>
     </properties>
 
