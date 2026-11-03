@@ -69,6 +69,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/health", "/api/auth/register", "/api/auth/login", "/api/auth/verify-email", "/api/auth/forgot-password", "/api/auth/reset-password", "/actuator/health", "/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
                         .permitAll()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest()
                         .authenticated());
 

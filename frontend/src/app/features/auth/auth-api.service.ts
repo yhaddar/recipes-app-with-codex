@@ -37,4 +37,8 @@ export class AuthApiService {
   login(payload: LoginPayload): Observable<AuthEnvelope<LoginData>> {
     return this.api.post('/auth/login', payload);
   }
+
+  logout(): Observable<AuthEnvelope<null>> {
+    return this.api.post<unknown, AuthEnvelope<null>>('/auth/logout', {});
+  }
 }

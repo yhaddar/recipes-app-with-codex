@@ -24,4 +24,10 @@ describe('AuthPageComponent', () => {
     expect(fixture.nativeElement.textContent).toContain('First name');
     expect(fixture.nativeElement.textContent).toContain('Create account');
   });
+
+  it('requires names in registration mode', () => {
+    (fixture.nativeElement.querySelectorAll('.auth-switch button')[1] as HTMLButtonElement).click();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('button.submit').disabled).toBeTrue();
+  });
 });

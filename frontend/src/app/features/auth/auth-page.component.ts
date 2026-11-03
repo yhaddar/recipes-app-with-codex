@@ -24,6 +24,7 @@ import { AuthStorageService } from '../../core/services/auth-storage.service';
         <label *ngIf="mode === 'register'" class="field">First name<input formControlName="firstName" autocomplete="given-name" /></label>
         <label *ngIf="mode === 'register'" class="field">Last name<input formControlName="lastName" autocomplete="family-name" /></label>
         <label class="field">Password<input type="password" formControlName="password" autocomplete="current-password" /></label>
+        <button *ngIf="storage.isAuthenticated" type="button" class="button button-secondary" (click)="logout()">Sign out</button>
         <p *ngIf="error" class="form-error" role="alert">{{ error }}</p>
         <p *ngIf="message" class="form-success" role="status">{{ message }}</p>
         <button class="button button-primary submit" type="submit" [disabled]="form.invalid || submitting">
@@ -52,7 +53,7 @@ import { AuthStorageService } from '../../core/services/auth-storage.service';
 export class AuthPageComponent {
   private readonly formBuilder = inject(FormBuilder);
   private readonly authApi = inject(AuthApiService);
-  private readonly storage = inject(AuthStorageService);
+  readonly storage = inject(AuthStorageService);
 
   readonly form = this.formBuilder.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
@@ -67,8 +68,17 @@ export class AuthPageComponent {
 
   setMode(mode: 'login' | 'register'): void {
     this.mode = mode;
+    const nameValidators = mode === 'register' ? [Validators.required] : [];
+    this.form.controls.firstName.setValidators(nameValidators);
+    this.form.controls.lastName.setValidators(nameValidators);
+    this.form.controls.firstName.updateValueAndValidity();
+    this.form.controls.lastName.updateValueAndValidity();
     this.error = '';
     this.message = '';
+  }
+
+  logout(): void {
+    this.authApi.logout().subscribe({ complete: () => this.storage.clear(), error: () => this.storage.clear() });
   }
 
   submit(): void {
