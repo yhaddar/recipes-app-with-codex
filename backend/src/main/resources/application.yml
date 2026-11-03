@@ -7,6 +7,11 @@ spring:
 server:
   port: ${SERVER_PORT:8080}
 
+app:
+  storage:
+    image-directory: ${IMAGE_STORAGE_DIRECTORY:storage/images}
+    max-file-size: ${IMAGE_MAX_FILE_SIZE:5242880}
+
 logging:
   config: classpath:logback-spring.xml
 
