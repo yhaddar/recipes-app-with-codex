@@ -24,4 +24,10 @@ public class AdminUserController {
     public ApiResponse<AccountStatusResponse> deactivate(@PathVariable UUID userId) {
         return ApiResponse.of(adminUserService.deactivate(userId), "Account deactivated");
     }
+
+    @PostMapping("/{userId}/activate")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ApiResponse<AccountStatusResponse> activate(@PathVariable UUID userId) {
+        return ApiResponse.of(adminUserService.activate(userId), "Account activated");
+    }
 }

@@ -25,4 +25,13 @@ public class AdminUserService {
         users.save(user);
         return new AccountStatusResponse(user.getId(), user.getAccountStatus().name());
     }
+
+    @Transactional
+    public AccountStatusResponse activate(UUID userId) {
+        AppUser user = users.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User was not found"));
+        user.activate();
+        users.save(user);
+        return new AccountStatusResponse(user.getId(), user.getAccountStatus().name());
+    }
 }

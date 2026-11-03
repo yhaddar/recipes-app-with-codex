@@ -27,4 +27,19 @@ class AdminUserServiceTest {
         assertThat(response.accountStatus()).isEqualTo("INACTIVE");
         verify(users).save(any(AppUser.class));
     }
+
+    @Test
+    void activatesInactiveAccountAndReturnsCurrentStatus() {
+        AppUserRepository users = org.mockito.Mockito.mock(AppUserRepository.class);
+        UUID id = UUID.randomUUID();
+        AppUser user = new AppUser(id, "cook@example.com", "Ada", "Cook");
+        user.verifyEmail();
+        user.deactivate();
+        when(users.findById(id)).thenReturn(Optional.of(user));
+
+        AccountStatusResponse response = new AdminUserService(users).activate(id);
+
+        assertThat(response.accountStatus()).isEqualTo("ACTIVE");
+        verify(users).save(any(AppUser.class));
+    }
 }

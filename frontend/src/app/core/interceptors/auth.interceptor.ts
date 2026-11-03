@@ -6,7 +6,8 @@ export const authInterceptor: HttpInterceptorFn = (request, next) => {
   const token = inject(AuthStorageService).token;
   const publicAuthPath = ['/auth/register', '/auth/login', '/auth/verify-email', '/auth/forgot-password', '/auth/reset-password'];
   const path = new URL(request.urlWithParams, window.location.origin).pathname.replace(/\/$/, '');
-  if (!token || publicAuthPath.some((publicPath) => path.endsWith(publicPath))) {
+  const apiPath = path.replace(/^.*\/api(?=\/)/, '');
+  if (!token || publicAuthPath.some((publicPath) => apiPath === publicPath)) {
     return next(request);
   }
 

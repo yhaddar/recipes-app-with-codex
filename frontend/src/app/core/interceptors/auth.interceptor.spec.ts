@@ -38,4 +38,13 @@ describe('authInterceptor', () => {
     expect(request.request.headers.has('Authorization')).toBeFalse();
     request.flush({});
   });
+
+  it('does not treat a similarly named non-auth endpoint as public', () => {
+    TestBed.inject(AuthStorageService).saveToken('test-token');
+    TestBed.inject(ApiClientService).get('/not-auth/login').subscribe();
+
+    const request = TestBed.inject(HttpTestingController).expectOne('http://localhost:8080/api/not-auth/login');
+    expect(request.request.headers.get('Authorization')).toBe('Bearer test-token');
+    request.flush({});
+  });
 });
