@@ -15,8 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import tools.jackson.databind.json.JsonMapper;
 class AuthControllerTest {
 
     private MockMvc mockMvc;
@@ -36,7 +35,7 @@ class AuthControllerTest {
 
         mockMvc.perform(post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(new ObjectMapper().writeValueAsString(
+                        .content(new JsonMapper().writeValueAsString(
                                 new RegistrationRequest("cook@example.com", "Secret123!", "Ada", "Cook"))))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.success").value(true))
